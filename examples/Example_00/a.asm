@@ -30,7 +30,7 @@ _DATA  ends
 _TEXT  segment para public 'CODE'
 Start:
    GotoXY 10,10
-   Pause    'Начнём, пожалуй...'
+   ;Pause    'Начнём, пожалуй...'
    ConsoleTitle "   Ввод целого числа, вывод суммы его цифр"
 Begin:
    clrscr
