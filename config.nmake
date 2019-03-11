@@ -1,9 +1,10 @@
 VC_STUDIO_PATH=C:\visual_studio
+WINDOWS_SDK_LIB_PATH=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um
 
 ASM= ml
 ASM_FLAGS= /c /coff /Fl /Sa  /I $(VC_STUDIO_PATH)\include
 
-COMMON_LIBS= /delayload:user32.dll /delayload:kernel32.dll  /delayload:msvcrt.dll /delayload:io_proc.dll
+COMMON_LIBS= user32.lib kernel32.lib 
 
 LINKER= link
-LINKER_FLAGS= /subsystem:console  /libpath:$(VC_STUDIO_PATH)\lib\x86 /libpath:C:\windows\system32 $(COMMON_LIBS)
+LINKER_FLAGS= /subsystem:console  /libpath:$(VC_STUDIO_PATH)\lib\x86 /libpath:"$(WINDOWS_SDK_LIB_PATH)\x86" $(COMMON_LIBS)
