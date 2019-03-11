@@ -1,0 +1,9 @@
+include ../../config.nmake
+
+all: a.exe
+
+a.exe:  a.obj
+	$(LINKER) $(LINKER_FLAGS) a.obj
+
+a.obj: a.asm
+	$(ASM) $(ASM_FLAGS) /I ../../include/windows a.asm 	

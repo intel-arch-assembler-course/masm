@@ -1,0 +1,9 @@
+VC_STUDIO_PATH=C:\visual_studio
+
+ASM= ml
+ASM_FLAGS= /c /coff /Fl /Sa  /I $(VC_STUDIO_PATH)\include
+
+COMMON_LIBS= /delayload:user32.dll /delayload:kernel32.dll  /delayload:msvcrt.dll /delayload:io_proc.dll
+
+LINKER= link
+LINKER_FLAGS= /subsystem:console  /libpath:$(VC_STUDIO_PATH)\lib\x86 /libpath:C:\windows\system32 $(COMMON_LIBS)
