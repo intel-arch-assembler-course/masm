@@ -1,5 +1,5 @@
-.NOLIST
-.NOLISTMACRO
+;.NOLIST
+;.NOLISTMACRO
 
 .586
 .model flat,stdcall
@@ -14,9 +14,9 @@ option casemap:none
    include io.inc
 ;include masm32.inc
 
-   includelib masm32.lib
-   includelib user32.lib
-   includelib kernel32.lib
-   includelib msvcrt.lib
-   includelib io_proc.lib
+   ;includelib masm32.lib
+   ;includelib user32.dll
+   ;includelib kernel32.dll
+   ;includelib msvcrt.dll
+   ;includelib io_proc.dll
    
