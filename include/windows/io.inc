@@ -1,5 +1,192 @@
 .NOLIST
 
+;================= PROTO ===============
+CharToOemA PROTO :DWORD,:DWORD
+CharToOem equ <CharToOemA>
+ClearScreen PROTO
+CloseHandle PROTO :DWORD; Закрыть файл
+CreateFileA PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+CreateFile equ <CreateFileA>
+ExitProcess PROTO :DWORD
+GetCommandLineA PROTO 
+GetCommandLine equ <GetCommandLineA>
+GetConsoleScreenBufferInfo PROTO :DWORD,:DWORD
+GetConsoleTitleA PROTO :DWORD,:DWORD
+;GetConsoleTitle equ <GetConsoleTitleA>
+GetModuleHandleA PROTO :DWORD
+GetModuleHandle equ <GetModuleHandleA>
+GetStdHandle PROTO :DWORD
+GetTickCount PROTO
+GetSystemMetrics PROTO :DWORD
+GetSystemTime PROTO :DWORD
+GlobalAlloc PROTO :DWORD,:DWORD
+GlobalFree PROTO :DWORD
+GlobalSize PROTO :DWORD
+InternetGetConnectedState PROTO :DWORD,:DWORD
+nrandom PROTO :DWORD
+shell PROTO :DWORD
+shell_ex PROTO :DWORD,:DWORD
+MessageBoxA PROTO :DWORD,:DWORD,:DWORD,:DWORD
+MessageBox equ <MessageBoxA>
+MessageBoxIndirectA PROTO :DWORD
+MessageBoxIndirect equ <MessageBoxIndirectA>
+nseed PROTO :DWORD; Randomize()
+SetConsoleCursorPosition PROTO :DWORD,:DWORD
+SetConsoleScreenBufferSize PROTO :DWORD,:DWORD
+SetConsoleTextAttribute PROTO :DWORD,:DWORD
+SetConsoleTitleA PROTO :DWORD
+SetConsoleTitle equ <SetConsoleTitleA>
+Sleep PROTO :DWORD
+StdIn PROTO :DWORD,:DWORD
+StdOut PROTO :DWORD
+VirtualProtect PROTO :DWORD,:DWORD,:DWORD,:DWORD
+URLDownloadToFileA PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+URLDownloadToFile equ <URLDownloadToFileA>
+wait_key PROTO
+
+c_msvcrt typedef PROTO C :VARARG
+externdef _imp__printf:PTR c_msvcrt
+externdef _imp__sprintf:PTR c_msvcrt
+crt_printf  equ <_imp__printf>
+crt_sprintf equ <_imp__sprintf>
+
+;======================= const =====================
+
+; --------- Константы цветов ------------------
+Black        equ 0h
+Blue         equ 1h
+Green        equ 2h
+Red          equ 4h
+Bright       equ 8h
+DarkGray     equ Bright
+Cyan         equ Blue+Green
+Brown        equ Green+Red
+Magenta      equ Blue+Red
+LightMagenta equ Bright+Blue+Red
+LightGray    equ Blue+Green+Red
+LightBlue    equ Bright+Blue
+LightGreen   equ Bright+Green
+LightRed     equ Bright+Red
+Yellow       equ Bright+Green+Red
+White        equ Bright+Blue+Green+Red
+; синонимы цветов
+black        equ Black
+blue         equ Blue
+green        equ Green
+red          equ Red
+bright       equ Bright
+darkgray     equ DarkGray
+cyan         equ Cyan
+brown        equ Brown
+magenta      equ Magenta
+lightmagenta equ LightMagenta
+lightgray    equ LightGray
+lightblue    equ LightBlue
+lightgreen   equ LightGreen
+lightred     equ LightRed
+yellow       equ Yellow
+white        equ White
+;---------------------------------------
+nil          equ dword ptr 0
+;---------------------------------------
+NULL                 equ 0
+GMEM_FIXED           equ 0h
+GMEM_ZEROINIT        equ 40h
+
+STD_INPUT_HANDLE     equ -10
+STD_OUTPUT_HANDLE    equ -11
+STD_ERROR_HANDLE     equ -12
+
+LANG_NEUTRAL         equ 0h
+; -------- Message Box ----------
+MB_OK                equ 0h
+MB_OKCANCEL          equ 1h
+MB_ABORTRETRYIGNORE  equ 2h
+MB_YESNOCANCEL       equ 3h
+MB_YESNO             equ 4h
+MB_RETRYCANCEL       equ 5h
+MB_CANCELTRYCONTINUE equ 6h
+MB_ICONHAND          equ 8h
+MB_ICONSTOP          equ 10h
+MB_ICONQUESTION      equ 20h
+MB_ICONEXCLAMATION   equ 30h
+MB_ICONASTERISK      equ 40h
+MB_USERICON	     equ 80h
+MB_DEFBUTTON1        equ 0h
+MB_DEFBUTTON2        equ 100h
+MB_DEFBUTTON3        equ 200h
+MB_DEFBUTTON4        equ 300h
+MB_SYSTEMMODAL       equ 1000h
+MB_HELP              equ 4000h
+MB_RIGHT             equ 80000h
+IDOK                 equ 1
+IDCANCEL             equ 2
+IDABORT              equ 3
+IDRETRY              equ 4
+IDIGNORE             equ 5
+IDYES                equ 6
+IDNO                 equ 7
+; ---------- страницы ----------------
+PAGE_NOACCESS        equ 1
+PAGE_READONLY        equ 2
+PAGE_READWRITE       equ 4
+PAGE_WRITECOPY       equ 8;  запись в копию страницы
+PAGE_EXECUTE         equ 10h
+PAGE_EXECUTE_READ    equ 20h
+PAGE_EXECUTE_READWRITE equ 40h
+PAGE_EXECUTE_WRITECOPY equ 80h;  запись в копию страницы
+;----------- Файлы ----------------
+GENERIC_READ         equ 80000000h
+GENERIC_WRITE        equ 40000000h
+GENERIC_EXECUTE      equ 20000000h
+GENERIC_ALL          equ 10000000h
+CREATE_NEW           equ 1
+CREATE_ALWAYS        equ 2; ReWrite существующий
+OPEN_EXISTING        equ 3
+OPEN_ALWAYS          equ 4; Существует - open, не существует - new
+TRUNCATE_EXISTING    equ 5
+FILE_ATTRIBUTE_READONLY   equ 1h
+FILE_ATTRIBUTE_HIDDEN     equ 2h
+FILE_ATTRIBUTE_SYSTEM     equ 4h
+FILE_ATTRIBUTE_DIRECTORY  equ 10h
+FILE_ATTRIBUTE_ARCHIVE    equ 20h; "обычный" файл
+FILE_ATTRIBUTE_NORMAL     equ 80h
+FILE_ATTRIBUTE_TEMPORARY  equ 100h
+FILE_ATTRIBUTE_COMPRESSED equ 800h
+
+;================= types ===============
+COORD struct
+  x  dw    ?
+  y  dw    ?
+COORD ends
+;---------------------------------------
+SMALL_RECT struct
+  Left     dw    ?
+  Top      dw    ?
+  Right    dw    ?
+  Bottom   dw    ?
+SMALL_RECT ends
+;---------------------------------------
+CONSOLE_SCREEN_BUFFER_INFO struct
+  dwSize              COORD <>
+  dwCursorPosition    COORD <>
+  wAttributes         WORD      ?
+  srWindow            SMALL_RECT <>
+  dwMaximumWindowSize COORD <>
+CONSOLE_SCREEN_BUFFER_INFO ends
+;---------------------------------------
+SystemTime struc
+  wYear         dw ?
+  wMonth        dw ?
+  wDayOfWeek    dw ?
+  wDay          dw ?
+  wHour         dw ?
+  wMinute       dw ?
+  wSecond       dw ?
+  wMilliseconds dw ?
+SystemTime ends
+;---------------------------------------
+
 ;================= macros ==============
 
 ;    purge GLOBAL; ненужный макрос в macros.inc
@@ -310,6 +497,7 @@ OutStr equ outstr
 OUTSTR equ outstr
 ;**********************************************
 outstr macro x:VARARG
+    .code
     ??SaveReg Flags
     ??CheckStrToBuf x
     invoke StdOut,eax
@@ -495,17 +683,19 @@ endm
 ;**************************************
 ; pause ["Текст для вывода..."]
 ;**************************************
-Pause equ pause
-PAUSE equ pause
-pause macro txt
-ifnb <txt>
-    outstr txt
-endif
-    ??SaveReg Flags
-    call wait_key
-    ??RestoreReg Flags
-    newline
-endm
+;PAUSE macro message_txt
+;ifnb <message_txt>    
+;    outstr message_text
+;endif
+;    ??SaveReg Flags
+;    call wait_key
+;    ??RestoreReg Flags
+;    newline
+;endm
+
+;Pause equ pause
+;PAUSE equ pause
+;pause equ PAUSE
 
 ;********************************************
 ; inchar macro x=m8,r8,prompt:VARARG
@@ -595,7 +785,7 @@ OutChar equ outchar
 OUTCHAR equ outchar
 OUTC    equ outchar
 ;**********************************
-outchar macro x:REQ,prompt:VarArg
+outchar macro x:REQ, prompt:VARARG
     local len,buf,L
 ifnb <prompt>
      outstr prompt
@@ -624,7 +814,7 @@ if len NE 1 and type (&x) NE 1 and type (&x) NE 0
     exitm
 endif
 .data
-buf  db 0,0
+buf  db 1, 0
 .code
     push eax
     mov  al,x
@@ -1153,193 +1343,10 @@ endm
 OpenFile macro Address,Attr
 ;   invoke CreateFile
 endm
-;======================= const =====================
 
-; --------- Константы цветов ------------------
-Black        equ 0h
-Blue         equ 1h
-Green        equ 2h
-Red          equ 4h
-Bright       equ 8h
-DarkGray     equ Bright
-Cyan         equ Blue+Green
-Brown        equ Green+Red
-Magenta      equ Blue+Red
-LightMagenta equ Bright+Blue+Red
-LightGray    equ Blue+Green+Red
-LightBlue    equ Bright+Blue
-LightGreen   equ Bright+Green
-LightRed     equ Bright+Red
-Yellow       equ Bright+Green+Red
-White        equ Bright+Blue+Green+Red
-; синонимы цветов
-black        equ Black
-blue         equ Blue
-green        equ Green
-red          equ Red
-bright       equ Bright
-darkgray     equ DarkGray
-cyan         equ Cyan
-brown        equ Brown
-magenta      equ Magenta
-lightmagenta equ LightMagenta
-lightgray    equ LightGray
-lightblue    equ LightBlue
-lightgreen   equ LightGreen
-lightred     equ LightRed
-yellow       equ Yellow
-white        equ White
-;---------------------------------------
-nil          equ dword ptr 0
-;---------------------------------------
-NULL                 equ 0
-GMEM_FIXED           equ 0h
-GMEM_ZEROINIT        equ 40h
-
-STD_INPUT_HANDLE     equ -10
-STD_OUTPUT_HANDLE    equ -11
-STD_ERROR_HANDLE     equ -12
-
-LANG_NEUTRAL         equ 0h
-; -------- Message Box ----------
-MB_OK                equ 0h
-MB_OKCANCEL          equ 1h
-MB_ABORTRETRYIGNORE  equ 2h
-MB_YESNOCANCEL       equ 3h
-MB_YESNO             equ 4h
-MB_RETRYCANCEL       equ 5h
-MB_CANCELTRYCONTINUE equ 6h
-MB_ICONHAND          equ 8h
-MB_ICONSTOP          equ 10h
-MB_ICONQUESTION      equ 20h
-MB_ICONEXCLAMATION   equ 30h
-MB_ICONASTERISK      equ 40h
-MB_USERICON	     equ 80h
-MB_DEFBUTTON1        equ 0h
-MB_DEFBUTTON2        equ 100h
-MB_DEFBUTTON3        equ 200h
-MB_DEFBUTTON4        equ 300h
-MB_SYSTEMMODAL       equ 1000h
-MB_HELP              equ 4000h
-MB_RIGHT             equ 80000h
-IDOK                 equ 1
-IDCANCEL             equ 2
-IDABORT              equ 3
-IDRETRY              equ 4
-IDIGNORE             equ 5
-IDYES                equ 6
-IDNO                 equ 7
-; ---------- страницы ----------------
-PAGE_NOACCESS        equ 1
-PAGE_READONLY        equ 2
-PAGE_READWRITE       equ 4
-PAGE_WRITECOPY       equ 8;  запись в копию страницы
-PAGE_EXECUTE         equ 10h
-PAGE_EXECUTE_READ    equ 20h
-PAGE_EXECUTE_READWRITE equ 40h
-PAGE_EXECUTE_WRITECOPY equ 80h;  запись в копию страницы
-;----------- Файлы ----------------
-GENERIC_READ         equ 80000000h
-GENERIC_WRITE        equ 40000000h
-GENERIC_EXECUTE      equ 20000000h
-GENERIC_ALL          equ 10000000h
-CREATE_NEW           equ 1
-CREATE_ALWAYS        equ 2; ReWrite существующий
-OPEN_EXISTING        equ 3
-OPEN_ALWAYS          equ 4; Существует - open, не существует - new
-TRUNCATE_EXISTING    equ 5
-FILE_ATTRIBUTE_READONLY   equ 1h
-FILE_ATTRIBUTE_HIDDEN     equ 2h
-FILE_ATTRIBUTE_SYSTEM     equ 4h
-FILE_ATTRIBUTE_DIRECTORY  equ 10h
-FILE_ATTRIBUTE_ARCHIVE    equ 20h; "обычный" файл
-FILE_ATTRIBUTE_NORMAL     equ 80h
-FILE_ATTRIBUTE_TEMPORARY  equ 100h
-FILE_ATTRIBUTE_COMPRESSED equ 800h
-;================= types ===============
-COORD struct
-  x  dw    ?
-  y  dw    ?
-COORD ends
-;---------------------------------------
-SMALL_RECT struct
-  Left     dw    ?
-  Top      dw    ?
-  Right    dw    ?
-  Bottom   dw    ?
-SMALL_RECT ends
-;---------------------------------------
-CONSOLE_SCREEN_BUFFER_INFO struct
-  dwSize              COORD <>
-  dwCursorPosition    COORD <>
-  wAttributes         WORD      ?
-  srWindow            SMALL_RECT <>
-  dwMaximumWindowSize COORD <>
-CONSOLE_SCREEN_BUFFER_INFO ends
-;---------------------------------------
-SystemTime struc
-  wYear         dw ?
-  wMonth        dw ?
-  wDayOfWeek    dw ?
-  wDay          dw ?
-  wHour         dw ?
-  wMinute       dw ?
-  wSecond       dw ?
-  wMilliseconds dw ?
-SystemTime ends
-;---------------------------------------
+;================= data declaration!!! ===============
 .data
 ??sTime SystemTime <>
-
-;================= PROTO ===============
-CharToOemA PROTO :DWORD,:DWORD
-CharToOem equ <CharToOemA>
-ClearScreen PROTO
-CloseHandle PROTO :DWORD; Закрыть файл
-CreateFileA PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
-CreateFile equ <CreateFileA>
-ExitProcess PROTO :DWORD
-GetCommandLineA PROTO 
-GetCommandLine equ <GetCommandLineA>
-GetConsoleScreenBufferInfo PROTO :DWORD,:DWORD
-GetConsoleTitleA PROTO :DWORD,:DWORD
-;GetConsoleTitle equ <GetConsoleTitleA>
-GetModuleHandleA PROTO :DWORD
-GetModuleHandle equ <GetModuleHandleA>
-GetStdHandle PROTO :DWORD
-GetTickCount PROTO
-GetSystemMetrics PROTO :DWORD
-GetSystemTime PROTO :DWORD
-GlobalAlloc PROTO :DWORD,:DWORD
-GlobalFree PROTO :DWORD
-GlobalSize PROTO :DWORD
-InternetGetConnectedState PROTO :DWORD,:DWORD
-nrandom PROTO :DWORD
-shell PROTO :DWORD
-shell_ex PROTO :DWORD,:DWORD
-MessageBoxA PROTO :DWORD,:DWORD,:DWORD,:DWORD
-MessageBox equ <MessageBoxA>
-MessageBoxIndirectA PROTO :DWORD
-MessageBoxIndirect equ <MessageBoxIndirectA>
-nseed PROTO :DWORD; Randomize()
-SetConsoleCursorPosition PROTO :DWORD,:DWORD
-SetConsoleScreenBufferSize PROTO :DWORD,:DWORD
-SetConsoleTextAttribute PROTO :DWORD,:DWORD
-SetConsoleTitleA PROTO :DWORD
-SetConsoleTitle equ <SetConsoleTitleA>
-Sleep PROTO :DWORD
-StdIn PROTO :DWORD,:DWORD
-StdOut PROTO :DWORD
-VirtualProtect PROTO :DWORD,:DWORD,:DWORD,:DWORD
-URLDownloadToFileA PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
-URLDownloadToFile equ <URLDownloadToFileA>
-wait_key PROTO
-
-c_msvcrt typedef PROTO C :VARARG
-externdef _imp__printf:PTR c_msvcrt
-externdef _imp__sprintf:PTR c_msvcrt
-crt_printf  equ <_imp__printf>
-crt_sprintf equ <_imp__sprintf>
 
 ;=============== Конец io.inc ========================
 
