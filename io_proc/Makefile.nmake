@@ -1,0 +1,15 @@
+
+include ..\config.nmake
+
+all: ..\lib\io_proc.lib
+
+io_proc.lib:  io_proc.obj
+	$(LIBRARIER) /OUT:io_proc.lib io_proc.obj
+
+..\lib\io_proc.lib: io_proc.lib
+	mkdir ..\lib
+	copy io_proc.lib  ..\lib\io_proc.lib
+
+
+io_proc.obj: io_proc.asm
+	$(ASM) $(ASM_FLAGS) /I ..\include\windows io_proc.asm
