@@ -45,11 +45,14 @@ URLDownloadToFile equ <URLDownloadToFileA>
 wait_key PROTO
 
 c_msvcrt typedef PROTO C :VARARG
-externdef _imp__printf:PTR c_msvcrt
-externdef _imp__sprintf:PTR c_msvcrt
-crt_printf  equ <_imp__printf>
-crt_sprintf equ <_imp__sprintf>
-
+;externdef _imp__printf:PTR c_msvcrt
+externdef printf:PTR c_msvcrt
+externdef sprintf:PTR c_msvcrt
+;externdef _imp__sprintf:PTR c_msvcrt
+;crt_printf  equ <_imp__printf>
+crt_printf  equ <printf>
+;crt_sprintf equ <_imp__sprintf>
+crt_printf  equ <printf>
 ;======================= const =====================
 
 ; --------- Константы цветов ------------------
@@ -683,15 +686,15 @@ endm
 ;**************************************
 ; pause ["Текст для вывода..."]
 ;**************************************
-;PAUSE macro message_txt
-;ifnb <message_txt>    
-;    outstr message_text
-;endif
-;    ??SaveReg Flags
-;    call wait_key
-;    ??RestoreReg Flags
-;    newline
-;endm
+do_pause macro message_txt
+ifnb <message_txt>    
+    outstr message_txt
+endif
+    ??SaveReg Flags
+    call wait_key
+    ??RestoreReg Flags
+    newline
+endm
 
 ;Pause equ pause
 ;PAUSE equ pause

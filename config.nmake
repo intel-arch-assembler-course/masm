@@ -1,10 +1,13 @@
 VC_STUDIO_PATH=C:\visual_studio
-WINDOWS_SDK_LIB_PATH=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um
+WINDOWS_SDK_LIB_PATH=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\
 
 ASM= ml
 ASM_FLAGS= /c /coff /Fl /Sa  /I $(VC_STUDIO_PATH)\include
 
-COMMON_LIBS= user32.lib kernel32.lib 
+COMMON_LIBS= user32.lib kernel32.lib libucrt.lib ucrt.lib  legacy_stdio_definitions.lib libvcruntime.lib libcmt.lib
+LOCAL_LIBS= io_proc.lib 
 
 LINKER= link
-LINKER_FLAGS= /subsystem:console  /libpath:$(VC_STUDIO_PATH)\lib\x86 /libpath:"$(WINDOWS_SDK_LIB_PATH)\x86" $(COMMON_LIBS)
+LINKER_FLAGS= /subsystem:console  /libpath:$(VC_STUDIO_PATH)\lib\x86 /libpath:"$(WINDOWS_SDK_LIB_PATH)\um\x86" /libpath:"$(WINDOWS_SDK_LIB_PATH)\ucrt\x86" $(COMMON_LIBS) $(LOCAL_LIBS)
+
+LIBRARIER= lib
