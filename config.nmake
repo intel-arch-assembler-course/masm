@@ -1,8 +1,16 @@
-VC_STUDIO_PATH=C:\visual_studio
-WINDOWS_SDK_LIB_PATH=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\
+VC_STUDIO_PATH="C:\visual_studio"
+
+WINDOWS_SDK_PATH=C:\Program Files (x86)\Windows Kits\10
+WINDOWS_SDK_VERSION=10.0.17763.0
+
+WINDOWS_SDK_LIB_PATH=$(WINDOWS_SDK_PATH)\Lib\$(WINDOWS_SDK_VERSION)
+WINDOWS_SDK_INC_PATH=$(WINDOWS_SDK_PATH)\Include\$(WINDOWS_SDK_VERSION)
 
 ASM= ml
 ASM_FLAGS= /c /coff /Fl /Sa  /I $(VC_STUDIO_PATH)\include
+
+CC= cl
+CFLAGS= /TC  /I "$(WINDOWS_SDK_INC_PATH)\um" /I "$(WINDOWS_SDK_INC_PATH)\Shared"
 
 COMMON_LIBS= user32.lib kernel32.lib libucrt.lib ucrt.lib  legacy_stdio_definitions.lib libvcruntime.lib libcmt.lib
 LOCAL_LIBS= io_proc.lib 

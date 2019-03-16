@@ -37,8 +37,8 @@ SetConsoleTextAttribute PROTO :DWORD,:DWORD
 SetConsoleTitleA PROTO :DWORD
 SetConsoleTitle equ <SetConsoleTitleA>
 Sleep PROTO :DWORD
-StdIn PROTO :DWORD,:DWORD
-StdOut PROTO :DWORD
+fgets PROTO :DWORD,:DWORD,:DWORD
+puts PROTO :DWORD
 VirtualProtect PROTO :DWORD,:DWORD,:DWORD,:DWORD
 URLDownloadToFileA PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
 URLDownloadToFile equ <URLDownloadToFileA>
@@ -53,6 +53,8 @@ externdef sprintf:PTR c_msvcrt
 crt_printf  equ <printf>
 ;crt_sprintf equ <_imp__sprintf>
 crt_printf  equ <printf>
+;fgets equ <_fgetts>
+externdef stdin:PTR  c_msvcrt
 ;======================= const =====================
 
 ; --------- Константы цветов ------------------
@@ -503,7 +505,7 @@ outstr macro x:VARARG
     .code
     ??SaveReg Flags
     ??CheckStrToBuf x
-    invoke StdOut,eax
+    invoke puts,eax
     ??RestoreReg Flags
 endm
 
@@ -665,7 +667,7 @@ ifnb <prompt>
 endif
      push   ecx
      push   edx
-     invoke StdIn,Buf,Len; eax:=Число прочитанных
+     invoke fgets,Buf,Len,stdin; eax:=Число прочитанных
      pop    edx
      pop    ecx
      push   ebx
@@ -691,7 +693,7 @@ ifnb <message_txt>
     outstr message_txt
 endif
     ??SaveReg Flags
-    call wait_key
+    ;call wait_key
     ??RestoreReg Flags
     newline
 endm
@@ -730,9 +732,9 @@ endif
 buf  db 0,0
 .code
     ??SaveReg Flags
-    mov buf+1,0
+    ;mov buf+1,0
 ;    invoke GetStdHandle,STD_INPUT_HANDLE; -10; eax:=INPUT_HANDLE
-L: invoke StdIn,offset buf,1; один символ
+L: invoke fgets,offset buf,2,stdin; один символ
     cmp buf,0
     je     L
     cmp buf,13;         CR
@@ -772,10 +774,10 @@ FLUSH equ flush
 flush macro
     local buf,L
 .data
-buf  db 0
+buf  db 0,0
 .code
     ??SaveReg Flags
-L:  invoke StdIn,offset buf,1; один символ
+L:  invoke fgets,offset buf,2,stdin; один символ
     cmp buf,10
     jne   L
     ??RestoreReg Flags

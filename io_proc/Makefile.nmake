@@ -3,8 +3,8 @@ include ..\config.nmake
 
 all: ..\lib\io_proc.lib
 
-io_proc.lib:  io_proc.obj
-	$(LIBRARIER) /OUT:io_proc.lib io_proc.obj
+io_proc.lib:  io_proc.obj  cls.obj
+	$(LIBRARIER) /OUT:io_proc.lib io_proc.obj  cls.obj
 
 ..\lib\io_proc.lib: io_proc.lib
 	mkdir ..\lib
@@ -13,3 +13,6 @@ io_proc.lib:  io_proc.obj
 
 io_proc.obj: io_proc.asm
 	$(ASM) $(ASM_FLAGS) /I ..\include\windows io_proc.asm
+
+cls.obj: cls.c
+	$(CC) $(CFLAGS) /c cls.c
