@@ -10,7 +10,7 @@ ASM= ml
 ASM_FLAGS= /c /coff /Fl /Sa  /I $(VC_STUDIO_PATH)\include
 
 CC= cl
-CFLAGS= /TC  /I "$(WINDOWS_SDK_INC_PATH)\um" /I "$(WINDOWS_SDK_INC_PATH)\Shared"
+CFLAGS= /TC  /I "$(WINDOWS_SDK_INC_PATH)\um" /I "$(WINDOWS_SDK_INC_PATH)\ucrt"  /I "$(WINDOWS_SDK_INC_PATH)\Shared" /I "$(VC_STUDIO_PATH)\include"
 
 COMMON_LIBS= user32.lib kernel32.lib libucrt.lib ucrt.lib  legacy_stdio_definitions.lib libvcruntime.lib libcmt.lib
 LOCAL_LIBS= io_proc.lib 
