@@ -505,6 +505,7 @@ outstr macro x:VARARG
     .code
     ??SaveReg Flags
     ??CheckStrToBuf x
+    
     invoke puts,eax
     ??RestoreReg Flags
 endm
@@ -660,29 +661,61 @@ endm
 ;**********************************************************
 inputstr equ InputStr
 INPUTSTR equ InputStr
-InputStr macro Buf:REQ,Len:=<128>,prompt:VARARG
-     Local L,M1,M2
+InputStr macro Buf:REQ, Len:=<128>, prompt:VARARG
+     Local L, ERR, M1
+     
 ifnb <prompt>
      outstr prompt
 endif
+
+     push   ebp
+     mov    ebp, esp
+     sub    esp, 4  ;reserving place for result ReadConsole
+     
+     push   eax
+     push   ebx
      push   ecx
      push   edx
-     invoke fgets,Buf,Len,stdin; eax:=Число прочитанных
+     
+     invoke GetStdHandle,STD_INPUT_HANDLE ; eax:=INPUT_HANDLE
+     
+     lea ebx, [ebp -4]
+     ;
+     ; stdin handler in eax
+     ;
+     invoke ReadConsole, eax, Buf, ebx, 0
+     
+     ;
+     ; Check error
+     ;
+     cmp    eax, 0
+     je     ERR
+     
+     ;
+     ; check end line 
+     ;
+     mov    edx, buf
+     mov    ecx, [ebp-4]
+     cmp    byte ptr [edx+ecx-1], 10 ;возврат каретки в буфере
+     jne    M1
+     sub    ecx, 1
+M1:  cmp    byte ptr [edx+eax-1], 13 ; перевод строки в буфере
+     jne    L
+     sub    ecx, 1
+     jump   L
+     
+ERR:
+     mov    ecx, 0 ; возвращаем пустую строку  
+     
+L:   mov    byte ptr [edx+eсx],0
+
      pop    edx
      pop    ecx
-     push   ebx
-     mov    ebx,Buf
-     cmp    eax,0
-     je     L 
-     cmp    byte ptr [ebx+eax-1],10;  CR,LF в буфере
-     jne    M1
-     sub    eax,2
-     jmp    L
-M1:  cmp    byte ptr [ebx+eax-1],13;  CR в буфере
-     jne    L
-     sub    eax,1
-L:   mov    byte ptr [ebx+eax],0
      pop    ebx
+     pop    eax
+     
+     mov    esp, ebp
+     pop    ebp
 endm
 
 ;**************************************
@@ -710,7 +743,7 @@ Inchar equ inchar
 INCHAR equ inchar
 ;********************************************
 inchar macro x:REQ,prompt:VARARG
-    local len,buf,L
+    local len,buf,L  
 ifnb <prompt>
      outstr prompt
 endif
@@ -733,14 +766,26 @@ buf  db 0,0
 .code
     ??SaveReg Flags
     ;mov buf+1,0
-;    invoke GetStdHandle,STD_INPUT_HANDLE; -10; eax:=INPUT_HANDLE
-L: invoke fgets,offset buf,2,stdin; один символ
+  L:  invoke  GetStdHandle, STD_INPUT_HANDLE ; -10; eax:=INPUT_HANDLE
+   
+   push ebp
+   mov  ebb,  esp 
+   sub  esp,  4
+   push ebx
+   lea  ebx, [ebp - 4] 
+   invoke ReadConsole, eax, offset buf,1,ebx ,0 ; один символ
+     
     cmp buf,0
     je     L
     cmp buf,13;         CR
     je     L
     cmp buf,10;         LF
     je     L
+    
+    pop  ebx
+    mov  esp, ebp
+    pop  ebp
+   
     ??RestoreReg Flags
 if len EQ 1;            x=r8
     mov  x,buf
@@ -777,9 +822,20 @@ flush macro
 buf  db 0,0
 .code
     ??SaveReg Flags
-L:  invoke fgets,offset buf,2,stdin; один символ
+L:  invoke  GetStdHandle, STD_INPUT_HANDLE ; -10; eax:=INPUT_HANDLE
+    push ebp
+    mov  ebp,  esp 
+    sub  esp,  4
+    push ebx
+    lea  ebx, [ebp - 4]
+    invoke ReadConsole, eax, offset buf,1,ebx ,0 ; один символ
     cmp buf,10
     jne   L
+    
+    pop ebx
+    mov esp, ebp
+    pop ebp
+    
     ??RestoreReg Flags
 endm
 
