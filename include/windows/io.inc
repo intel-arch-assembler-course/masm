@@ -3,7 +3,8 @@
 ;================= PROTO ===============
 CharToOemA PROTO :DWORD,:DWORD
 CharToOem equ <CharToOemA>
-ClearScreen PROTO
+
+ClearScreen equ <OurClearConsole>
 CloseHandle PROTO :DWORD; Закрыть файл
 CreateFileA PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
 CreateFile equ <CreateFileA>
@@ -35,6 +36,8 @@ SetConsoleCursorPosition PROTO :DWORD,:DWORD
 SetConsoleScreenBufferSize PROTO :DWORD,:DWORD
 SetConsoleTextAttribute PROTO :DWORD,:DWORD
 SetConsoleTitleA PROTO :DWORD
+ReadConsole equ <ReadConsoleA>
+ReadConsoleA PROTO :DWORD, :DWORD, :DWORD, :DWORD, :DWORD
 SetConsoleTitle equ <SetConsoleTitleA>
 Sleep PROTO :DWORD
 fgets PROTO :DWORD,:DWORD,:DWORD
@@ -53,8 +56,9 @@ externdef sprintf:PTR c_msvcrt
 crt_printf  equ <printf>
 ;crt_sprintf equ <_imp__sprintf>
 crt_printf  equ <printf>
-;fgets equ <_fgetts>
-externdef stdin:PTR  c_msvcrt
+;fgets equ <_fgetts>  
+externdef OurClearConsole:PTR c_msvcrt
+;externdef stdin:PTR  c_msvcrt
 ;======================= const =====================
 
 ; --------- Константы цветов ------------------
@@ -694,7 +698,7 @@ endif
      ;
      ; check end line 
      ;
-     mov    edx, buf
+     mov    edx, Buf
      mov    ecx, [ebp-4]
      cmp    byte ptr [edx+ecx-1], 10 ;возврат каретки в буфере
      jne    M1
@@ -707,7 +711,7 @@ M1:  cmp    byte ptr [edx+eax-1], 13 ; перевод строки в буфере
 ERR:
      mov    ecx, 0 ; возвращаем пустую строку  
      
-L:   mov    byte ptr [edx+eсx],0
+L:   mov    byte ptr [edx+ecx], 0
 
      pop    edx
      pop    ecx

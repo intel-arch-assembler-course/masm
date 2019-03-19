@@ -9,13 +9,30 @@ _10 dd 10
 ;---------------------------------------------
 inint_proc proc
 ; Схема Горнера
+     push  ebp
+     mov   ebp, esp
+     sub   esp, 4
+ 
      push  ebx
      push  ecx
      push  edx
+     push  esi
+
      mov   buf+1,0;   ещё не было символов числа
      mov   buf+2,0;   хороший конец лексемы (spaces,CR,LF)
      xor   ebx,ebx;   здесь формируем x
-LL:  invoke StdIn,offset buf,1; один символ
+     
+     invoke GetStdHandle,STD_INPUT_HANDLE ; eax:=INPUT_HANDLE
+     mov  esi, eax
+     
+     lea edx, [ebp -4]
+     ;
+     ; stdin handler in eax
+     ;
+LL:  invoke ReadConsole, esi, offset buf, 1 , edx, 0
+
+
+;LL:  invoke StdIn,offset buf,1; один символ
      cmp   buf,' '
      jne   L1
      cmp   buf+1,0
@@ -78,9 +95,13 @@ L6:  cmp   buf+1,'-'; ZF:=1 => есть "-", иначе ZF:=0
      je    L7
      or    byte ptr [esp],80h; SF:=1
 L7:  popfd;         есть флаги CF=0, ZF и SF
-L8:  pop   edx
+L8:  pop   esi
+     pop   edx
      pop   ecx
      pop   ebx
+
+     mov   esp, ebp
+     pop   ebp
      ret
 Error:
      SetTextAttr Yellow
