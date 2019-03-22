@@ -38,6 +38,8 @@ SetConsoleTextAttribute PROTO :DWORD,:DWORD
 SetConsoleTitleA PROTO :DWORD
 ReadConsole equ <ReadConsoleA>
 ReadConsoleA PROTO :DWORD, :DWORD, :DWORD, :DWORD, :DWORD
+WriteConsole equ <WriteConsoleA>
+WriteConsoleA PROTO :DWORD, :DWORD, :DWORD, :DWORD, :DWORD
 SetConsoleTitle equ <SetConsoleTitleA>
 Sleep PROTO :DWORD
 fgets PROTO :DWORD,:DWORD,:DWORD
@@ -506,11 +508,50 @@ OutStr equ outstr
 OUTSTR equ outstr
 ;**********************************************
 outstr macro x:VARARG
+    local LEN_LOOP
     .code
     ??SaveReg Flags
     ??CheckStrToBuf x
-    
-    invoke puts,eax
+
+     push   ebp
+     mov    ebp, esp
+     sub    esp, 4  ;reserving place for result ReadConsole
+     
+     
+     push   ebx
+     push   ecx
+     push   edx
+     
+     mov    ebx,eax ; move address x in memory from 
+                    ; eax to ebx 
+     
+
+
+     mov    edx, 0
+     
+LEN_LOOP:
+     mov    eax, [ebx+edx]
+     cmp    eax, 0
+     jne    LEN_LOOP
+     inc    edx
+         
+     
+     invoke GetStdHandle,STD_OUTPUT_HANDLE ; eax:=OUTPUT_HANDLE
+     
+     lea ecx, [ebp -4]
+     ;
+     ; stdout handler in eax
+     ;
+     invoke WriteConsole, eax, ebx, edx, ecx, 0
+     
+      pop edx
+      pop ecx
+      pop ebx
+      
+      
+      mov esp, ebp
+      pop ebp
+     
     ??RestoreReg Flags
 endm
 
@@ -687,7 +728,7 @@ endif
      ;
      ; stdin handler in eax
      ;
-     invoke ReadConsole, eax, Buf, ebx, 0
+     invoke ReadConsole, eax, Buf, Len ,ebx, 0
      
      ;
      ; Check error

@@ -16,3 +16,8 @@ io_proc.obj: io_proc.asm
 
 cls.obj: cls.c
 	$(CC) $(CFLAGS) /c cls.c
+
+clean:
+	del io_proc.obj
+	del cls.obj
+	del io_proc.lib
