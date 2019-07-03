@@ -42,7 +42,7 @@ OUTCHAR macro symb:req
         call    _get_ecx_base
         add     ecx, offset _GLOBAL_OFFSET_TABLE_
         mov     eax, stdout
-        push    eax
+        push    (eax)
         movzx   eax, symb
         push    eax
         call    fputc
