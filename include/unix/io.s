@@ -1,5 +1,5 @@
 
-extern _exit: near, fputc: near, _GLOBAL_OFFSET_TABLE_: dword, stdout: dword, fflush: near  
+extern _exit: near, fputc: near, _GLOBAL_OFFSET_TABLE_: dword, stdout@GOT :dword, fflush: near , got: dword
 
 .code
 
@@ -27,9 +27,13 @@ _get_ecx_base endp
 ;exit equ EXIT
 
 EXIT macro x:=<0>
-    cld
-    push stdout
+    call    _get_ecx_base
+    add     ecx, offset _GLOBAL_OFFSET_TABLE_
+    mov     eax, stdout@GOT[ecx]
+    push    [eax]
     call fflush
+    add  esp, 4
+
     push x
     call _exit
 endm
@@ -41,8 +45,8 @@ OUTCHAR macro symb:req
         push    ecx
         call    _get_ecx_base
         add     ecx, offset _GLOBAL_OFFSET_TABLE_
-        mov     eax, stdout
-        push    (eax)
+        mov     eax, stdout@GOT[ecx]
+        push    [eax]
         movzx   eax, symb
         push    eax
         call    fputc
