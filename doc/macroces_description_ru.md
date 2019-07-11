@@ -402,24 +402,25 @@ cp866/сp1251. По умолчанию режим такой, какой он е
 задаются в параметре формата i8 в виде _16*\<цвет фона\>+\<цвет букв\>_.
 
 Определены имена следующих констант цветов:
-     цвет     |    значение            
---------------|------------------------
- Black        | 0h                     
- Blue         | 1h                     
- Green        | 2h                     
- Red          | 4h                     
- Bright       | 8h                     
- DarkGray     | Bright                 
- Cyan         | Blue+Green             
- Brown        | Green+Red              
- Magenta      | Blue+Red               
- LightMagenta | Bright+Blue+Red        
- LightGray    | Blue+Green+Red         
- LightBlue    | Bright+Blue            
- LightGreen   | Bright+Green           
- LightRed     | Bright+Red             
- Yellow       | Bright+Green+Red       
- White        | Bright+Blue+Green+Red  
+
+цвет         |    значение            
+-------------|----------------------
+Black        | 0h                     
+Blue         | 1h                     
+Green        | 2h                     
+Red          | 4h                     
+Bright       | 8h                     
+DarkGray     | Bright                 
+Cyan         | Blue+Green             
+Brown        | Green+Red              
+Magenta      | Blue+Red               
+LightMagenta | Bright+Blue+Red        
+LightGray    | Blue+Green+Red         
+LightBlue    | Bright+Blue            
+LightGreen   | Bright+Green           
+LightRed     | Bright+Red             
+Yellow       | Bright+Green+Red       
+White        | Bright+Blue+Green+Red  
 
 При отсутствии параметра подразумевается выставление цвета _LightGray_.
 Действие макрокоманды эквивалентно (за исключением случая пустого параметра)
