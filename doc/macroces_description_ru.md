@@ -469,7 +469,7 @@ MB\_ICONSTOP         | ![stop](pic/stop.jpg)
 MB\_ICONQUESTION     | ![quest](pic/quest.png)
 MB\_ICONEXCLAMATION  | ![notify](pic/notify.jpg) обычно здесь выдаётся ещё и звуковой сигнал
 MB\_ICONASTERISK     | ![info](pic/info.png)
-MB\_USERICON         | без пиктограммы
+MB\_USERICON         | без пиктограммы (можно сделать свой _.ico_ файл)
 
 При нажатии на кнопку в регистре _EAX_ возвращается код нажатой кнопки.
 Мнемонические имена этих кодов:
@@ -497,4 +497,8 @@ _IDABORT_, _IDRETRY_, _IDIGNORE_, _IDYES_, _IDNO_, _IDTRYAGAIN_, _IDCONTINUE_
     cmp eax, DNO
     je  Bad_Chance
 ```
+
+## Дополнительные макрокоманды для продвинутого уровня обучения
+
+### new - макрокоманда порождения динамической переменной
 
